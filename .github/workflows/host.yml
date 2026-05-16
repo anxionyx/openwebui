@@ -1,0 +1,30 @@
+name: Spawn Quick Open WebUI
+
+on: [push, workflow_dispatch]
+
+jobs:
+  launch:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Start Open WebUI and Quick Tunnel
+        run: docker compose -f docker-compose.github.yml up -d
+
+      - name: Wait and Extract Public URL
+        run: |
+          echo "Giving Cloudflare a moment to generate a tunnel..."
+          sleep 10
+          
+          echo "=================================================="
+          echo "YOUR TEMPORARY OPEN WEBUI URL:"
+          # Fetch logs from the tunnel and parse out the generated .trycloudflare.com link
+          docker logs cloudflare-tunnel 2>&1 | grep -o 'https://[^ ]*trycloudflare.com' | head -n 1
+          echo "=================================================="
+
+      - name: Keep Action Alive (Optional)
+        run: |
+          echo "Keeping runner alive for 15 minutes. Cancel the workflow run to stop early."
+          sleep 900
