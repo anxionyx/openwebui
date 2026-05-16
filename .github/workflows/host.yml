@@ -26,5 +26,5 @@ jobs:
 
       - name: Keep Action Alive (Optional)
         run: |
-          echo "Keeping runner alive for 15 minutes. Cancel the workflow run to stop early."
-          sleep 900000000
+          echo "Keeping runner alive for  1 day . Cancel the workflow run to stop early."
+          sleep 86400
