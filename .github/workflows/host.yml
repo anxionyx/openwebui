@@ -11,10 +11,13 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Start Open WebUI and Quick Tunnel
-        run: docker compose -f docker-compose.github.yml up -d
-
+        run: |
+          docker pull ghcr.io/open-webui/open-webui:main
+          docker run -d -p 3000:8080 -v open-webui:/app/backend/data --name open-webui ghcr.io/open-webui/open-webui:main
       - name: Wait and Extract Public URL
         run: |
+          wget -O cloud.deb https://github.com/cloudflare/cloudflared/releases/download/2026.5.0/cloudflared-fips-linux-amd64
+          sudo dpkg -i ./cloud.deb
           echo "Giving Cloudflare a moment to generate a tunnel..."
           sleep 10
           
@@ -26,5 +29,6 @@ jobs:
 
       - name: Keep Action Alive (Optional)
         run: |
+          watch -n 4 docker ps
           echo "Keeping runner alive for  1 day . Cancel the workflow run to stop early."
           sleep 86400
