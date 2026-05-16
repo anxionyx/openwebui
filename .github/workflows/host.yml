@@ -28,6 +28,6 @@ jobs:
 
       - name: Keep Action Alive (Optional)
         run: |
-          watch -n 4 docker ps
+          
           echo "Keeping runner alive for  1 day . Cancel the workflow run to stop early."
           sleep 86400
